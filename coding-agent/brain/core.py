@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Optional
 from pathlib import Path
 
-OPCODE = "/usr/local/share/nvm/versions/node/v20.11.1/bin/opencode"
+OPCODE = os.getenv("OPCODE_BIN") or os.environ.get("HOME", "") and os.path.expanduser("~/.local/bin/opencode") or "opencode"
 
 PROVIDERS = {
     "openai":     {"url": "https://api.openai.com/v1",     "models": ["gpt-4o","gpt-4o-mini","o3-mini"]},
@@ -68,7 +68,8 @@ class Brain:
             if not c.model:
                 c.model = info["models"][0]
             if not c.api_key:
-                c.api_key = os.getenv(f"{c.provider.upper()}_API_KEY", "")
+                # Try provider-specific key first, fall back to generic LLM_API_KEY
+                c.api_key = os.getenv(f"{c.provider.upper()}_API_KEY", "") or os.getenv("LLM_API_KEY", "")
 
     def _call_api(self, messages: list[dict], system: str = "") -> dict:
         c = self.cfg
@@ -134,30 +135,38 @@ class Brain:
 
     def _parse_json(self, text: str):
         if not text:
+            print("[WARN] _parse_json: Empty text provided")
             return None
+        
         text = re.sub(r'```(?:json)?\n?', '', text).strip()
+        
         # Try direct parse first
         try:
             return json.loads(text)
-        except:
-            pass
+        except json.JSONDecodeError as e:
+            print(f"[DEBUG] Direct JSON parse failed: {e}")
+        
         # Try to find JSON array or object in the text
         for pat in [r'\[[\s\S]*?\]', r'\{[\s\S]*?\}']:
             for m in re.finditer(pat, text):
                 try:
                     result = json.loads(m.group(0))
                     if isinstance(result, (list, dict)):
+                        print(f"[DEBUG] Found JSON via pattern matching")
                         return result
-                except:
+                except json.JSONDecodeError:
                     continue
+        
         # Last resort: try to fix common issues
         fixed = text.strip()
         if fixed.startswith("'") and fixed.endswith("'"):
             fixed = fixed[1:-1]
         try:
             return json.loads(fixed)
-        except:
-            pass
+        except json.JSONDecodeError as e:
+            print(f"[ERROR] All JSON parsing attempts failed for text: {text[:200]}")
+            print(f"[ERROR] Final error: {e}")
+        
         return None
 
     def plan(self, task: str, context: str = "", tools_info: str = "", workdir: str = "") -> list[dict]:
@@ -171,7 +180,8 @@ class Brain:
             "search_files","grep","tree","web_search","web_fetch",
             "install_deps","run_tests","ask_user","analyze_file","find_file",
             "codebase_overview","find_references","find_symbol","dependency_graph","similar_files",
-            "generate_image_prompt","generate_story","analyze_dataframe","run_ml_experiment","visualize_data"
+            "generate_image_prompt","generate_story","analyze_dataframe","run_ml_experiment","visualize_data",
+            "git_status","git_diff","git_log","read_directory","file_info","run_command",
         ]
         prompt = f"""Task: {task}
 Working directory: {cwd}

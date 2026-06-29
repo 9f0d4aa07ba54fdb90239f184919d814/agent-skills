@@ -1,0 +1,198 @@
+{
+  "summary": {
+    "total_tests": 16,
+    "pass": 8,
+    "fail": 8,
+    "warn": 0,
+    "skip": 0,
+    "pass_rate": 50.0
+  },
+  "by_file": {
+    "kernel.kernel": {
+      "PASS": 2,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "brain.decision_engine": {
+      "PASS": 1,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "brain.world_model": {
+      "PASS": 2,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "brain.provenance": {
+      "PASS": 1,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "brain.policy.engine": {
+      "PASS": 1,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "core.repository_intelligence.parser": {
+      "PASS": 0,
+      "FAIL": 2,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "science.benchmarks.olympics": {
+      "PASS": 1,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    }
+  },
+  "results": [
+    {
+      "file": "kernel.kernel",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 92.26822853088379,
+      "details": null
+    },
+    {
+      "file": "brain.decision_engine",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 5.362510681152344,
+      "details": null
+    },
+    {
+      "file": "brain.world_model",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 9.340047836303711,
+      "details": null
+    },
+    {
+      "file": "brain.provenance",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 6.299018859863281,
+      "details": null
+    },
+    {
+      "file": "brain.policy.engine",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 12.396812438964844,
+      "details": null
+    },
+    {
+      "file": "core.repository_intelligence.parser",
+      "test_type": "import",
+      "status": "FAIL",
+      "message": "No module named 'core.repository_intelligence.parser'",
+      "duration_ms": 0.835418701171875,
+      "details": null
+    },
+    {
+      "file": "science.benchmarks.olympics",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 7.426738739013672,
+      "details": null
+    },
+    {
+      "file": "kernel.kernel",
+      "test_type": "api_create",
+      "status": "PASS",
+      "message": "Kernel created",
+      "duration_ms": 3.0126571655273438,
+      "details": null
+    },
+    {
+      "file": "kernel.kernel",
+      "test_type": "api",
+      "status": "FAIL",
+      "message": "Job.__init__() got an unexpected keyword argument 'task'",
+      "duration_ms": 4.868030548095703,
+      "details": {
+        "error": "Traceback (most recent call last):\n  File \"c:\\agent-skills\\agent-skills\\scripts\\verify_execution.py\", line 65, in test_kernel_api\n    job = Job(task=dummy_task)\nTypeError: Job.__init__() got an unexpected keyword argument 'task'\n"
+      }
+    },
+    {
+      "file": "brain.decision_engine",
+      "test_type": "api",
+      "status": "FAIL",
+      "message": "cannot import name 'DecisionContext' from 'brain.decision_engine' (c:\\agent-skills\\agent-skills\\coding-agent\\brain\\decision_engine.py)",
+      "duration_ms": 0.2803802490234375,
+      "details": {
+        "error": "Traceback (most recent call last):\n  File \"c:\\agent-skills\\agent-skills\\scripts\\verify_execution.py\", line 87, in test_decision_engine_api\n    from brain.decision_engine import DecisionEngine, DecisionContext\nImportError: cannot import name 'DecisionContext' from 'brain.decision_engine' (c:\\agent-skills\\agent-skills\\coding-agent\\brain\\decision_engine.py)\n"
+      }
+    },
+    {
+      "file": "brain.policy.engine",
+      "test_type": "enforce",
+      "status": "FAIL",
+      "message": "'PolicyEngine' object has no attribute 'add_policy'",
+      "duration_ms": 0.0069141387939453125,
+      "details": {
+        "error": "Traceback (most recent call last):\n  File \"c:\\agent-skills\\agent-skills\\scripts\\verify_execution.py\", line 122, in test_policy_enforcement\n    engine.add_policy(NoSecretsInCodePolicy())\n    ^^^^^^^^^^^^^^^^^\nAttributeError: 'PolicyEngine' object has no attribute 'add_policy'\n"
+      }
+    },
+    {
+      "file": "core.repository_intelligence.parser",
+      "test_type": "parse",
+      "status": "FAIL",
+      "message": "No module named 'core.repository_intelligence.parser'",
+      "duration_ms": 1.2116432189941406,
+      "details": {
+        "error": "Traceback (most recent call last):\n  File \"c:\\agent-skills\\agent-skills\\scripts\\verify_execution.py\", line 173, in test_repository_intelligence\n    from core.repository_intelligence.parser import RepositoryParser\nModuleNotFoundError: No module named 'core.repository_intelligence.parser'\n"
+      }
+    },
+    {
+      "file": "science.benchmarks.olympics",
+      "test_type": "benchmark",
+      "status": "FAIL",
+      "message": "cannot import name 'OlympicTask' from 'science.benchmarks.olympics' (c:\\agent-skills\\agent-skills\\coding-agent\\science\\benchmarks\\olympics.py)",
+      "duration_ms": 0.010013580322265625,
+      "details": {
+        "error": "Traceback (most recent call last):\n  File \"c:\\agent-skills\\agent-skills\\scripts\\verify_execution.py\", line 208, in test_olympics_benchmark\n    from science.benchmarks.olympics import EngineeringOlympics, OlympicTask\nImportError: cannot import name 'OlympicTask' from 'science.benchmarks.olympics' (c:\\agent-skills\\agent-skills\\coding-agent\\science\\benchmarks\\olympics.py)\n"
+      }
+    },
+    {
+      "file": "brain.world_model",
+      "test_type": "api_create",
+      "status": "PASS",
+      "message": "WorldModel created",
+      "duration_ms": 0.98419189453125,
+      "details": null
+    },
+    {
+      "file": "brain.world_model",
+      "test_type": "world_model",
+      "status": "FAIL",
+      "message": "'WorldModel' object has no attribute 'add_architecture'",
+      "duration_ms": 0.0016689300537109375,
+      "details": {
+        "error": "Traceback (most recent call last):\n  File \"c:\\agent-skills\\agent-skills\\scripts\\verify_execution.py\", line 250, in test_world_model\n    model.add_architecture(\"test_component\", {\"type\": \"service\"})\n    ^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'WorldModel' object has no attribute 'add_architecture'. Did you mean: 'set_architecture'?\n"
+      }
+    },
+    {
+      "file": "brain.provenance",
+      "test_type": "provenance",
+      "status": "FAIL",
+      "message": "cannot import name 'ProvenanceTracker' from 'brain.provenance' (c:\\agent-skills\\agent-skills\\coding-agent\\brain\\provenance.py)",
+      "duration_ms": 0.00858306884765625,
+      "details": {
+        "error": "Traceback (most recent call last):\n  File \"c:\\agent-skills\\agent-skills\\scripts\\verify_execution.py\", line 274, in test_provenance\n    from brain.provenance import ProvenanceTracker, DecisionRecord\nImportError: cannot import name 'ProvenanceTracker' from 'brain.provenance' (c:\\agent-skills\\agent-skills\\coding-agent\\brain\\provenance.py)\n"
+      }
+    }
+  ]
+}

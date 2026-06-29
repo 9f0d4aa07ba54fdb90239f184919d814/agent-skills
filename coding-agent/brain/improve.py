@@ -66,26 +66,57 @@ class SelfImprover:
             improvements.append(f"Optimize {len(slow_tasks)} slow tasks")
         return improvements
 
+    def common_failure_patterns(self) -> list[str]:
+        """Detect recurring failure patterns from session log."""
+        if len(self.session_log) < 2:
+            return []
+        failed_tasks = [t for t in self.session_log if not t.get("success")]
+        if len(failed_tasks) < 2:
+            return []
+        # Group similar error patterns
+        from collections import Counter
+        tasks_short = [t["task"][:40].lower() for t in failed_tasks]
+        # Simple heuristic: if similar task keywords repeat, flag the pattern
+        words = []
+        for t in tasks_short:
+            words.extend(w for w in t.split() if len(w) > 3)
+        word_counts = Counter(words)
+        repeated = [w for w, c in word_counts.most_common(3) if c >= 2]
+        if repeated:
+            return [f"Repeated failure around concept: '{w}' ({word_counts[w]}x)" for w in repeated]
+        return []
+
     def compact_knowledge(self) -> str:
         """Return actionable context from previous tasks for the next prompt."""
         if not self.session_log:
             return ""
         lines = ["[Previously known facts: (use these instead of re-running tools)]"]
-        for t in self.session_log[-3:]:
+        for t in self.session_log[-5:]:
             task_short = t['task'][:60]
             result_short = t.get('result', '')[:100]
             status = "✓" if t.get('success') else "?"
             lines.append(f"  {status} {task_short}")
             if result_short:
                 lines.append(f"    › {result_short}")
+        patterns = self.common_failure_patterns()
+        if patterns:
+            lines.append("  [Failure patterns detected:]")
+            for p in patterns:
+                lines.append(f"    ⚠ {p}")
         return "\n".join(lines)
 
     def end_session(self):
         summary = self.summarize_session()
         improvements = self.generate_improvements()
+        patterns = self.common_failure_patterns()
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         knowledge_file = IMPROVE_DIR / f"knowledge_{timestamp}.md"
-        knowledge_file.write_text(f"# Session {timestamp}\n\n{summary}\n\n## Improvements\n" + "\n".join(f"- {i}" for i in improvements))
+        lines = [f"# Session {timestamp}", "", summary, "", "## Improvements"]
+        lines.extend(f"- {i}" for i in improvements)
+        if patterns:
+            lines.extend(["", "## Failure Patterns", ""])
+            lines.extend(f"- {p}" for p in patterns)
+        knowledge_file.write_text("\n".join(lines))
         self.session_log = []
         self._save_session()
         return summary

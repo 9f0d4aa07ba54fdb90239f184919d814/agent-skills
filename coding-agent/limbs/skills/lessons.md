@@ -35,9 +35,9 @@
 - [2026-06-28] `search_files` is not a valid tool; use `glob` with a pattern like `**/*.py` to find files by glob pattern (from: Count how many classes are defined across all Python files in the project)
 - [2026-06-28] Multiple matches can span imports, usages, and definitions (from: Find all references to the string 'GoogleMemory' in the codebase)
 - [2026-06-28] Grep works well for finding string references across files (from: Find all references to the string 'GoogleMemory' in the codebase)
-- [2026-06-28] {'description': 'Counted 4 files with actual class definitions: agent.py, brain/core.py, brain/learn.py, limbs/tools/runner.py', 'worked': True, 'suggested_fix': None} (from: Find all Python files containing 'class' keyword and count how many have it)
-- [2026-06-28] {'description': 'Grep for bare \'class\' matches imports like \'dataclass\' and strings like \'"classes"\', not just class definitions', 'worked': False, 'suggested_fix': 'Use regex `\\bclass\\s+\\w+` or `^\\s*class\\s+` to match only Python class definition statements'} (from: Find all Python files containing 'class' keyword and count how many have it)
-- [2026-06-28] {'content': 'The command `wc -l` successfully counted lines in a Python file', 'category': 'tool_usage'} (from: read the file brain/core.py and count how many lines it has)
+- [2026-06-28] Counted 4 files with actual class definitions: agent.py, brain/core.py, brain/learn.py, limbs/tools/runner.py (from: Find all Python files containing 'class' keyword and count how many have it)
+- [2026-06-28] Grep for bare 'class' matches imports like 'dataclass' and strings like 'classes', not just class definitions — use regex \bclass\s+\w+ or ^\s*class\s+ to match only Python class definition statements (from: Find all Python files containing 'class' keyword and count how many have it)
+- [2026-06-28] The command `wc -l` successfully counted lines in a Python file (from: read the file brain/core.py and count how many lines it has)
 - [2026-06-28] The file brain/core.py does not exist in the workspace. The workspace directory /workspaces/empty contains only .git/, browser-agent/, coding-agent/, hello.txt, and web_agent.py. (from: read the file brain/core.py and count how many lines it has)
 - [2026-06-28] The 'agent' directory is at /workspaces/empty/browser-agent/agent, not directly under /workspaces/empty/agent — so the original grep path was invalid, which caused the 'No files found' result. (from: List all .py files in the agent directory that contain 'class' keyword)
 - [2026-06-28] Check directory contents first when a search returns empty to distinguish 'no matching files' from 'wrong path' (from: List all .py files in the agent directory that contain 'class' keyword)
@@ -45,6 +45,3 @@
 - [2026-06-28] Always verify the target directory exists and resolve its full path before searching — the 'agent' directory was nested under ./browser-agent/ (from: List all .py files in the agent directory that contain 'class' keyword)
 - [2026-06-28] File write success confirmed by size in bytes in result message (from: Create a file called hello.txt with content 'Hello World')
 - [2026-06-28] Simple file creation tasks use write_file with path and content parameters (from: Create a file called hello.txt with content 'Hello World')
-# Lessons Learned
-
-- [2026-06-28] {'lesson': 'Used write tool to create a new file — straightforward and successful', 'category': 'tool_usage'} (from: Create a file called hello.txt with content 'Hello World')

@@ -1,0 +1,301 @@
+{
+  "summary": {
+    "total_tests": 30,
+    "pass": 26,
+    "fail": 4,
+    "issues_generated": 4
+  },
+  "results": [
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 20.46656608581543,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class Kernel exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class Job exists",
+      "duration_ms": 0.0007152557373046875,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.initialize exists",
+      "duration_ms": 0.0007152557373046875,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.shutdown exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.process_task exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.process_task_async exists",
+      "duration_ms": 0.0007152557373046875,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.get_job_result exists",
+      "duration_ms": 0.0002384185791015625,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.register_worker exists",
+      "duration_ms": 0.0002384185791015625,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.get_worker exists",
+      "duration_ms": 0.0002384185791015625,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.list_workers exists",
+      "duration_ms": 0.0,
+      "issue": null
+    },
+    {
+      "contract_name": "kernel.kernel",
+      "test_type": "method_exists",
+      "status": "PASS",
+      "message": "Kernel.get_kernel_stats exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.decision_engine",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 1.692056655883789,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.decision_engine",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class DecisionEngine exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.decision_engine",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class Decision exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.decision_engine",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class DecisionType exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.world_model",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 0.4305839538574219,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.world_model",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class WorldModel exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.policy.engine",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 4.177093505859375,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.policy.engine",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class PolicyEngine exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.policy.engine",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class PolicyVerdict exists",
+      "duration_ms": 0.0002384185791015625,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.policy.engine",
+      "test_type": "class_exists",
+      "status": "FAIL",
+      "message": "Class BasePolicy missing",
+      "duration_ms": 0.0007152557373046875,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.provenance",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 3.8995742797851562,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.provenance",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class DecisionRecord exists",
+      "duration_ms": 0.00095367431640625,
+      "issue": null
+    },
+    {
+      "contract_name": "brain.provenance",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class DecisionProvenanceStore exists",
+      "duration_ms": 0.0002384185791015625,
+      "issue": null
+    },
+    {
+      "contract_name": "core.repository_intelligence.parser",
+      "test_type": "import",
+      "status": "FAIL",
+      "message": "Import failed: No module named 'core.repository_intelligence.parser'",
+      "duration_ms": 1.027822494506836,
+      "issue": null
+    },
+    {
+      "contract_name": "science.benchmarks.olympics",
+      "test_type": "import",
+      "status": "PASS",
+      "message": "Module imported",
+      "duration_ms": 3.4041404724121094,
+      "issue": null
+    },
+    {
+      "contract_name": "science.benchmarks.olympics",
+      "test_type": "class_exists",
+      "status": "PASS",
+      "message": "Class EngineeringOlympics exists",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    },
+    {
+      "contract_name": "science.benchmarks.olympics",
+      "test_type": "class_exists",
+      "status": "FAIL",
+      "message": "Class OlympicTask missing",
+      "duration_ms": 0.00095367431640625,
+      "issue": null
+    },
+    {
+      "contract_name": "science.benchmarks.olympics",
+      "test_type": "class_exists",
+      "status": "FAIL",
+      "message": "Class BenchmarkResult missing",
+      "duration_ms": 0.000476837158203125,
+      "issue": null
+    }
+  ],
+  "issues": [
+    {
+      "issue_id": "CLS-015E91",
+      "component": "brain.policy.engine.BasePolicy",
+      "failure": "Class BasePolicy not found in brain.policy.engine",
+      "severity": "high",
+      "suggested_fix": "Implement class BasePolicy in brain.policy.engine or update contract if class was renamed/removed.",
+      "tests_required": [
+        "tests/test_basepolicy.py"
+      ],
+      "estimated_effort": "1d",
+      "status": "open"
+    },
+    {
+      "issue_id": "IMP-083211",
+      "component": "core.repository_intelligence.parser",
+      "failure": "Module import failed: No module named 'core.repository_intelligence.parser'",
+      "severity": "critical",
+      "suggested_fix": "Create core/repository_intelligence/parser with required classes and methods. Check if __init__.py files exist in parent directories.",
+      "tests_required": [
+        "tests/test_parser_import.py",
+        "tests/test_parser_api.py"
+      ],
+      "estimated_effort": "1w",
+      "status": "open"
+    },
+    {
+      "issue_id": "CLS-327F61",
+      "component": "science.benchmarks.olympics.OlympicTask",
+      "failure": "Class OlympicTask not found in science.benchmarks.olympics",
+      "severity": "high",
+      "suggested_fix": "Implement class OlympicTask in science.benchmarks.olympics or update contract if class was renamed/removed.",
+      "tests_required": [
+        "tests/test_olympictask.py"
+      ],
+      "estimated_effort": "1d",
+      "status": "open"
+    },
+    {
+      "issue_id": "CLS-A48907",
+      "component": "science.benchmarks.olympics.BenchmarkResult",
+      "failure": "Class BenchmarkResult not found in science.benchmarks.olympics",
+      "severity": "high",
+      "suggested_fix": "Implement class BenchmarkResult in science.benchmarks.olympics or update contract if class was renamed/removed.",
+      "tests_required": [
+        "tests/test_benchmarkresult.py"
+      ],
+      "estimated_effort": "1d",
+      "status": "open"
+    }
+  ]
+}

@@ -28,7 +28,7 @@ except ImportError:
     sys.exit(1)
 
 
-OPCODE_BIN = "/usr/local/share/nvm/versions/node/v20.11.1/bin/opencode"
+OPCODE_BIN = os.getenv("OPCODE_BIN") or os.environ.get("HOME", "") and os.path.expanduser("~/.local/bin/opencode") or "opencode"
 SKILLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "skills")
 
 

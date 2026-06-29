@@ -74,9 +74,22 @@ class LearningLoop:
             self._create_skill_from_pattern(key)
         patterns_file.write_text(json.dumps(data, indent=2))
 
+    def _skill_exists(self, name: str) -> bool:
+        """Check if a skill with this name (or similar) already exists."""
+        name_lower = name.lower().replace("-", " ").strip()
+        if not SKILLS_DIR.exists():
+            return False
+        for d in SKILLS_DIR.iterdir():
+            if d.is_dir() and (d / "SKILL.md").exists():
+                existing_name = d.name.lower().replace("-", " ").strip()
+                # Exact or near-exact match
+                if existing_name == name_lower or name_lower in existing_name or existing_name in name_lower:
+                    return True
+        return False
+
     def _create_skill(self, name: str, task: str, patterns: list):
         name = name.lower().replace(" ", "-").replace("_", "-")[:40].strip("-")
-        if not name:
+        if not name or self._skill_exists(name):
             return
         skill_dir = SKILLS_DIR / name
         skill_dir.mkdir(parents=True, exist_ok=True)
@@ -106,7 +119,7 @@ Learned from: {task}
 
     def _create_skill_from_pattern(self, pattern: str):
         name = pattern.lower().replace(" ", "-")[:40].strip("-")
-        if not name:
+        if not name or self._skill_exists(name):
             return
         skill_dir = SKILLS_DIR / name
         skill_dir.mkdir(parents=True, exist_ok=True)

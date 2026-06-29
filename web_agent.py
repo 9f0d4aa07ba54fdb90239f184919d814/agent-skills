@@ -5,13 +5,14 @@ Dynamically analyzes web pages and decides next actions at runtime.
 """
 
 import sys
+import os
 import json
 import subprocess
 import re
 import time
 from playwright.sync_api import sync_playwright
 
-OPCODE_BIN = "/usr/local/share/nvm/versions/node/v20.11.1/bin/opencode"
+OPCODE_BIN = os.getenv("OPCODE_BIN") or os.environ.get("HOME", "") and os.path.expanduser("~/.local/bin/opencode") or "opencode"
 
 
 def strip_ansi(s: str) -> str:

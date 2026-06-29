@@ -3,10 +3,27 @@ LIMB: Tools - Execution tools that plug into the brain.
 All tools accept and return the same format: {"ok": bool, "data": str, "error": str}
 """
 
-import subprocess, sys, os, tempfile, json, time, shutil, importlib, re
+import subprocess, sys, os, tempfile, json, time, shutil, importlib, re, functools
 from pathlib import Path
 from typing import Optional
 from .codebase import CodebaseAnalyzer
+
+
+def safe_tool(func):
+    """Decorator that wraps tool methods to standardize error handling.
+    Catches exceptions and returns the standard {"ok": bool, "data": str, "error": str} format.
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except PermissionError as e:
+            return {"ok": False, "data": "", "error": f"Permission denied: {e}"}
+        except FileNotFoundError as e:
+            return {"ok": False, "data": "", "error": f"File not found: {e}"}
+        except Exception as e:
+            return {"ok": False, "data": "", "error": f"{type(e).__name__}: {e}"[:300]}
+    return wrapper
 
 
 class Tools:
@@ -48,45 +65,36 @@ class Tools:
         os.unlink(fpath)
         return result
 
+    @safe_tool
     def read_file(self, path: str, offset: int = 0, limit: int = 0) -> dict:
-        try:
-            p = self._safe_path(path)
-            if not p.exists(): return {"ok": False, "data": "", "error": f"not found: {path}"}
-            content = p.read_text()
-            if offset > 0 or limit > 0:
-                lines = content.split("\n")
-                start = max(0, offset - 1)
-                end = start + limit if limit > 0 else len(lines)
-                content = "\n".join(lines[start:end])
-            return {"ok": True, "data": content, "error": ""}
-        except PermissionError as e:
-            return {"ok": False, "data": "", "error": str(e)}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        p = self._safe_path(path)
+        if not p.exists():
+            return {"ok": False, "data": "", "error": f"not found: {path}"}
+        content = p.read_text()
+        if offset > 0 or limit > 0:
+            lines = content.split("\n")
+            start = max(0, offset - 1)
+            end = start + limit if limit > 0 else len(lines)
+            content = "\n".join(lines[start:end])
+        return {"ok": True, "data": content, "error": ""}
 
+    @safe_tool
     def write_file(self, path: str, content: str) -> dict:
-        try:
-            p = self._safe_path(path)
-            p.parent.mkdir(parents=True, exist_ok=True)
-            p.write_text(content)
-            return {"ok": True, "data": f"written {path} ({len(content)}b)", "error": ""}
-        except PermissionError as e:
-            return {"ok": False, "data": "", "error": str(e)}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        p = self._safe_path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(content)
+        return {"ok": True, "data": f"written {path} ({len(content)}b)", "error": ""}
 
+    @safe_tool
     def edit_file(self, path: str, old: str, new: str) -> dict:
-        try:
-            p = self._safe_path(path)
-            if not p.exists(): return {"ok": False, "data": "", "error": f"not found: {path}"}
-            content = p.read_text()
-            if old not in content: return {"ok": False, "data": "", "error": f"text not found in {path}"}
-            p.write_text(content.replace(old, new, 1))
-            return {"ok": True, "data": f"edited {path} (1 replacement)", "error": ""}
-        except PermissionError as e:
-            return {"ok": False, "data": "", "error": str(e)}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        p = self._safe_path(path)
+        if not p.exists():
+            return {"ok": False, "data": "", "error": f"not found: {path}"}
+        content = p.read_text()
+        if old not in content:
+            return {"ok": False, "data": "", "error": f"text not found in {path}"}
+        p.write_text(content.replace(old, new, 1))
+        return {"ok": True, "data": f"edited {path} (1 replacement)", "error": ""}
 
     def search_files(self, pattern: str) -> dict:
         clean = pattern.removeprefix("**/")
@@ -133,33 +141,30 @@ class Tools:
 
     # --- Codebase Understanding ---
 
+    @safe_tool
     def analyze_file(self, path: str) -> dict:
-        try:
-            p = self._safe_path(path)
-            if not p.exists(): return {"ok": False, "data": "", "error": f"not found: {path}"}
-            content = p.read_text()
-            lines = content.split("\n")
-            info = {
-                "path": path, "lines": len(lines), "size": len(content),
-                "type": p.suffix,
-                "imports": [],
-                "classes": [],
-                "functions": [],
-                "summary": content[:2000]
-            }
-            for line in lines[:200]:
-                s = line.strip()
-                if s.startswith("import ") or s.startswith("from "):
-                    info["imports"].append(s)
-                if "class " in s and ":" in s:
-                    info["classes"].append(s)
-                if "def " in s and ":" in s:
-                    info["functions"].append(s)
-            return {"ok": True, "data": json.dumps(info, indent=2), "error": ""}
-        except PermissionError as e:
-            return {"ok": False, "data": "", "error": str(e)}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        p = self._safe_path(path)
+        if not p.exists():
+            return {"ok": False, "data": "", "error": f"not found: {path}"}
+        content = p.read_text()
+        lines = content.split("\n")
+        info = {
+            "path": path, "lines": len(lines), "size": len(content),
+            "type": p.suffix,
+            "imports": [],
+            "classes": [],
+            "functions": [],
+            "summary": content[:2000]
+        }
+        for line in lines[:200]:
+            s = line.strip()
+            if s.startswith("import ") or s.startswith("from "):
+                info["imports"].append(s)
+            if "class " in s and ":" in s:
+                info["classes"].append(s)
+            if "def " in s and ":" in s:
+                info["functions"].append(s)
+        return {"ok": True, "data": json.dumps(info, indent=2), "error": ""}
 
     def find_file(self, name: str, path: str = "") -> dict:
         search_dir = Path(self.workdir) / path if path else Path(self.workdir)
@@ -236,67 +241,55 @@ class Tools:
 
     # --- Interaction Tools ---
 
+    @safe_tool
     def ask_user(self, question: str) -> dict:
         print(f"\n[AGENT] Question: {question}")
         print("[AGENT] (Type your answer, or press Enter for 'continue'): ", end="", flush=True)
-        try:
-            answer = sys.stdin.readline().strip()
-            if not answer:
-                answer = "continue"
-            return {"ok": True, "data": answer, "error": ""}
-        except Exception as e:
-            return {"ok": False, "data": "continue", "error": str(e)}
+        answer = sys.stdin.readline().strip()
+        if not answer:
+            answer = "continue"
+        return {"ok": True, "data": answer, "error": ""}
 
     # --- Codebase Understanding ---
 
+    @safe_tool
     def codebase_overview(self) -> dict:
-        try:
-            overview = self.codebase.codebase_overview()
-            return {"ok": True, "data": json.dumps(overview, indent=2), "error": ""}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        overview = self.codebase.codebase_overview()
+        return {"ok": True, "data": json.dumps(overview, indent=2), "error": ""}
 
+    @safe_tool
     def find_references(self, name: str) -> dict:
-        try:
-            refs = self.codebase.find_references(name)
-            return {"ok": True, "data": "\n".join(refs[:30]) if refs else f"no references to '{name}'", "error": ""}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        refs = self.codebase.find_references(name)
+        return {"ok": True, "data": "\n".join(refs[:30]) if refs else f"no references to '{name}'", "error": ""}
 
+    @safe_tool
     def find_symbol(self, symbol: str) -> dict:
-        try:
-            result = self.codebase.find_symbol(symbol)
-            parts = []
-            for c in result["classes"]:
-                parts.append(f"class {c['name']}: {', '.join(c['files'][:3])}")
-            for f in result["functions"]:
-                parts.append(f"function {f['name']}: {', '.join(f['files'][:3])}")
-            return {"ok": True, "data": "\n".join(parts[:20]) if parts else f"no symbol '{symbol}' found", "error": ""}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        result = self.codebase.find_symbol(symbol)
+        parts = []
+        for c in result["classes"]:
+            parts.append(f"class {c['name']}: {', '.join(c['files'][:3])}")
+        for f in result["functions"]:
+            parts.append(f"function {f['name']}: {', '.join(f['files'][:3])}")
+        return {"ok": True, "data": "\n".join(parts[:20]) if parts else f"no symbol '{symbol}' found", "error": ""}
 
+    @safe_tool
     def dependency_graph(self) -> dict:
-        try:
-            deps = self.codebase.dependency_graph()
-            if not deps:
-                return {"ok": True, "data": "no dependencies found", "error": ""}
-            lines = [f"{f} depends on:" for f, d in deps.items()]
-            for f, d in list(deps.items())[:15]:
-                for dep in d[:3]:
-                    lines.append(f"  -> {dep}")
-            return {"ok": True, "data": "\n".join(lines[:50]), "error": ""}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        deps = self.codebase.dependency_graph()
+        if not deps:
+            return {"ok": True, "data": "no dependencies found", "error": ""}
+        lines = [f"{f} depends on:" for f, d in deps.items()]
+        for f, d in list(deps.items())[:15]:
+            for dep in d[:3]:
+                lines.append(f"  -> {dep}")
+        return {"ok": True, "data": "\n".join(lines[:50]), "error": ""}
 
+    @safe_tool
     def similar_files(self, path: str) -> dict:
-        try:
-            sim = self.codebase.similar_files(path)
-            if not sim:
-                return {"ok": True, "data": f"no similar files to '{path}'", "error": ""}
-            lines = [f"{s['path']} (score: {s['score']}, {s['lines']} lines)" for s in sim]
-            return {"ok": True, "data": "\n".join(lines), "error": ""}
-        except Exception as e:
-            return {"ok": False, "data": "", "error": str(e)}
+        sim = self.codebase.similar_files(path)
+        if not sim:
+            return {"ok": True, "data": f"no similar files to '{path}'", "error": ""}
+        lines = [f"{s['path']} (score: {s['score']}, {s['lines']} lines)" for s in sim]
+        return {"ok": True, "data": "\n".join(lines), "error": ""}
 
     # --- Creative / Image Tools ---
 
@@ -359,6 +352,90 @@ print('Saved to {output_path}')
         if out_path.exists():
             return {"ok": True, "data": f"Visualization saved to {output_path}", "error": ""}
         return result
+
+    # --- Git Tools ---
+
+    @safe_tool
+    def git_status(self) -> dict:
+        """Show git status of the working directory."""
+        r = subprocess.run(["git", "status", "--short"],
+                          capture_output=True, text=True, timeout=10,
+                          cwd=self.workdir)
+        if r.returncode != 0:
+            return {"ok": False, "data": "", "error": r.stderr[:200] or "not a git repo"}
+        out = r.stdout.strip()
+        if not out:
+            return {"ok": True, "data": "Working tree clean — no changes", "error": ""}
+        lines = out.split("\n")
+        summary = f"{sum(1 for l in lines if l.startswith('M') or l.startswith('?') or l.startswith('A'))} file(s) changed\n"
+        return {"ok": True, "data": summary + out[:2000], "error": ""}
+
+    @safe_tool
+    def git_diff(self, path: str = "") -> dict:
+        """Show git diff for working tree changes."""
+        cmd = ["git", "diff"]
+        if path:
+            cmd.append(path)
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=10, cwd=self.workdir)
+        if r.returncode != 0:
+            return {"ok": False, "data": "", "error": r.stderr[:200]}
+        out = r.stdout.strip()
+        if not out:
+            return {"ok": True, "data": "No changes to show", "error": ""}
+        return {"ok": True, "data": out[:4000], "error": ""}
+
+    @safe_tool
+    def git_log(self, count: int = 10) -> dict:
+        """Show recent git commit history."""
+        r = subprocess.run(["git", "log", f"--max-count={count}",
+                           "--oneline", "--decorate"],
+                          capture_output=True, text=True, timeout=10,
+                          cwd=self.workdir)
+        if r.returncode != 0:
+            return {"ok": False, "data": "", "error": r.stderr[:200]}
+        return {"ok": True, "data": r.stdout.strip()[:2000], "error": ""}
+
+    # --- Directory Tools ---
+
+    @safe_tool
+    def read_directory(self, path: str = ".") -> dict:
+        """List all files and folders in a directory, one per line."""
+        target = Path(self.workdir) / path if not Path(path).is_absolute() else Path(path)
+        if not target.exists():
+            return {"ok": False, "data": "", "error": f"directory not found: {path}"}
+        if not target.is_dir():
+            return {"ok": False, "data": "", "error": f"not a directory: {path}"}
+        items = []
+        for f in sorted(target.iterdir()):
+            suffix = "/" if f.is_dir() else ""
+            items.append(f"{f.name}{suffix}")
+        return {"ok": True, "data": "\n".join(items[:100]), "error": ""}
+
+    @safe_tool
+    def file_info(self, path: str) -> dict:
+        """Get metadata about a file (size, lines, type)."""
+        p = self._safe_path(path)
+        if not p.exists():
+            return {"ok": False, "data": "", "error": f"not found: {path}"}
+        import datetime
+        stat = p.stat()
+        info = {
+            "path": path, "size": stat.st_size,
+            "modified": datetime.datetime.fromtimestamp(stat.st_mtime).isoformat(),
+            "type": p.suffix or "(no extension)",
+        }
+        if p.is_file() and stat.st_size < 500000:
+            try:
+                content = p.read_text(encoding="utf-8", errors="replace")
+                info["lines"] = len(content.split("\n"))
+            except:
+                info["lines"] = 0
+        return {"ok": True, "data": json.dumps(info, indent=2), "error": ""}
+
+    @safe_tool
+    def run_command(self, cmd: str, timeout: int = 30) -> dict:
+        """Run an arbitrary shell command on the host system."""
+        return self._run(["bash", "-c", cmd], timeout=timeout)
 
     # --- Utility ---
 

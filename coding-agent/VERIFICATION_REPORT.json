@@ -1,0 +1,178 @@
+{
+  "timestamp": "2026-06-29T18:13:58.560885",
+  "phases": {
+    "syntax": {
+      "passed": 90,
+      "issues": []
+    },
+    "structure": {
+      "found": [
+        "brain",
+        "kernel",
+        "repository",
+        "workers",
+        "tests",
+        "science"
+      ],
+      "missing": [],
+      "missing_inits": [
+        ".",
+        "brain\\policy",
+        "engineering\\benchmarks",
+        "engineering\\experiments",
+        "limbs\\memory",
+        "limbs\\skills",
+        "limbs\\tools",
+        "science\\benchmarks",
+        "science\\experiments",
+        "science\\graphs",
+        "scripts",
+        "tests"
+      ]
+    },
+    "components": {
+      "kernel": {
+        "exists": true,
+        "missing": []
+      },
+      "policy": {
+        "exists": true,
+        "missing": []
+      },
+      "provenance": {
+        "exists": true
+      },
+      "repository": {
+        "exists": true,
+        "missing": []
+      },
+      "workers": {
+        "exists": true
+      },
+      "world_model": {
+        "exists": true
+      },
+      "olympics": {
+        "exists": true
+      }
+    },
+    "tests": {
+      "total_files": 90,
+      "test_files": 5,
+      "coverage_est": 5.6,
+      "missing_tests": [
+        "agent.py",
+        "config.py",
+        "_debug_code_query.py",
+        "_debug_code_query2.py",
+        "__main__.py",
+        "brain\\arch_graph.py",
+        "brain\\benchmark.py",
+        "brain\\code_intel.py",
+        "brain\\context_engine.py",
+        "brain\\core.py",
+        "brain\\decision_engine.py",
+        "brain\\engineering_reasoner.py",
+        "brain\\enterprise_memory.py",
+        "brain\\execution_planner.py",
+        "brain\\goal_engine.py",
+        "brain\\improve.py",
+        "brain\\learn.py",
+        "brain\\parallel_agents.py",
+        "brain\\personalities.py",
+        "brain\\provenance.py"
+      ]
+    },
+    "security": {
+      "secrets": [
+        {
+          "file": "agent.py",
+          "line": 119
+        },
+        {
+          "file": "agent.py",
+          "line": 533
+        },
+        {
+          "file": "test_new_components.py",
+          "line": 459
+        },
+        {
+          "file": "brain\\benchmark.py",
+          "line": 41
+        },
+        {
+          "file": "brain\\core.py",
+          "line": 50
+        },
+        {
+          "file": "brain\\core.py",
+          "line": 52
+        },
+        {
+          "file": "brain\\core.py",
+          "line": 72
+        },
+        {
+          "file": "brain\\core.py",
+          "line": 76
+        },
+        {
+          "file": "brain\\core.py",
+          "line": 83
+        },
+        {
+          "file": "brain\\core.py",
+          "line": 86
+        }
+      ],
+      "unsafe": [
+        {
+          "file": "brain\\reviewer.py",
+          "line": 132,
+          "pattern": "eval("
+        },
+        {
+          "file": "brain\\reviewer.py",
+          "line": 133,
+          "pattern": "exec("
+        },
+        {
+          "file": "brain\\reviewer.py",
+          "line": 136,
+          "pattern": "subprocess.call"
+        },
+        {
+          "file": "brain\\verifier.py",
+          "line": 233,
+          "pattern": "eval("
+        },
+        {
+          "file": "brain\\verifier.py",
+          "line": 234,
+          "pattern": "exec("
+        },
+        {
+          "file": "brain\\verifier.py",
+          "line": 236,
+          "pattern": "subprocess.call"
+        },
+        {
+          "file": "scripts\\verify_system.py",
+          "line": 127,
+          "pattern": "eval("
+        },
+        {
+          "file": "scripts\\verify_system.py",
+          "line": 127,
+          "pattern": "exec("
+        },
+        {
+          "file": "scripts\\verify_system.py",
+          "line": 127,
+          "pattern": "subprocess.call"
+        }
+      ]
+    }
+  }
+}
