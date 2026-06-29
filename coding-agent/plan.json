@@ -1,0 +1,17 @@
+[
+  {
+    "tool": "read_file",
+    "args": {"path": "/workspaces/empty/coding-agent/limbs/skills/lessons.md"},
+    "desc": "Read all learned lessons from previous tasks"
+  },
+  {
+    "tool": "read_file",
+    "args": {"path": "/workspaces/empty/coding-agent/limbs/skills/patterns.json"},
+    "desc": "Read tracked behavioral patterns and their frequencies"
+  },
+  {
+    "tool": "read_file",
+    "args": {"path": "/workspaces/empty/coding-agent/limbs/skills/coding-agent/SKILL.md"},
+    "desc": "Read the auto-generated skill promoted from repeated patterns"
+  }
+]

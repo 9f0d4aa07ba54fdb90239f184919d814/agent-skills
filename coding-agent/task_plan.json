@@ -1,0 +1,42 @@
+[
+  {
+    "tool": "grep",
+    "args": {
+      "text": "class Memory",
+      "include": "*.py",
+      "path": "/workspaces/empty/coding-agent"
+    },
+    "desc": "Find all classes named Memory or containing Memory in the project"
+  },
+  {
+    "tool": "grep",
+    "args": {
+      "text": "class Brain",
+      "include": "*.py",
+      "path": "/workspaces/empty/coding-agent"
+    },
+    "desc": "Find all classes named Brain in the project"
+  },
+  {
+    "tool": "read_file",
+    "args": {
+      "path": "/workspaces/empty/coding-agent/limbs/memory/google_store.py"
+    },
+    "desc": "Read the Memory class file to see all its methods"
+  },
+  {
+    "tool": "read_file",
+    "args": {
+      "path": "/workspaces/empty/coding-agent/brain/core.py",
+      "offset": 55
+    },
+    "desc": "Read the Brain class starting from line 55 to see all its methods"
+  },
+  {
+    "tool": "run_python",
+    "args": {
+      "code": "import re\n\nwith open('/workspaces/empty/coding-agent/limbs/memory/google_store.py') as f:\n    memory_text = f.read()\nwith open('/workspaces/empty/coding-agent/brain/core.py') as f:\n    brain_text = f.read()\n\nmemory_methods = re.findall(r'    def (\\w+)', memory_text)\nbrain_methods = re.findall(r'    def (\\w+)', brain_text)\n\nprint('=== Memory (GoogleMemory) methods ===')\nfor m in sorted(memory_methods):\n    print(f'  {m}')\nprint()\nprint('=== Brain methods ===')\nfor m in sorted(brain_methods):\n    print(f'  {m}')\nprint()\n\nshared = set(memory_methods) & set(brain_methods)\nprint(f'Shared methods: {shared if shared else \"NONE\"}')\nprint()\nif shared == set(memory_methods) and shared == set(brain_methods):\n    print('RESULT: Memory class has the SAME methods as Brain')\nelse:\n    print(f'RESULT: Memory class does NOT have the same methods as Brain')\n    print(f'  Memory has {len(memory_methods)} methods, Brain has {len(brain_methods)} methods')"
+    },
+    "desc": "Compare method lists of Memory and Brain classes programmatically"
+  }
+]
