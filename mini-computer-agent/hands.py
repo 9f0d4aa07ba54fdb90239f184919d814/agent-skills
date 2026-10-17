@@ -24,8 +24,7 @@ def see_windows() -> str:
 
 def click(x: int, y: int) -> str:
     run(f"xdotool mousemove {x} {y} click 1")
-    return f"Clicked ({x}, {y})"
-
+av
 def type_text(text: str) -> str:
     run(f"xdotool type --delay 40 {sh(text)}")
     return f"Typed: {text}"
